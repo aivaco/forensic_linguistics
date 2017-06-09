@@ -11,40 +11,54 @@ import edu.stanford.nlp.process.TokenizerFactory;
 import edu.stanford.nlp.tagger.maxent.MaxentTagger;
 
 import java.io.*;
-import java.util.List;
+import java.util.*;
 
 /**
- * Created by aivan on 07/06/2017.
+ * It is in charge of classifies the words of a text.
  */
 public class Classify {
-    public String classifyText(String text)throws IOException, ClassNotFoundException {
-        MaxentTagger tagger = new MaxentTagger(".//models/wsj-0-18-left3words-distsim.tagger");
+
+    /**
+     * Classifies the words of a respective text. To classify, it takes each word and assigns them an id.
+     * @param text
+     * @return
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    public List<TaggedWord> classifyText(String text)throws IOException, ClassNotFoundException {
+        MaxentTagger tagger = new MaxentTagger(".//models/spanish.tagger");
         TokenizerFactory<CoreLabel> ptbTokenizerFactory = PTBTokenizer.factory(new CoreLabelTokenFactory(),
                 "untokenizable=noneKeep");
-        //BufferedReader r = new BufferedReader(new InputStreamReader(new FileInputStream(".//sample-input.txt"), "utf-8"));
         InputStream is = new ByteArrayInputStream(text.getBytes());
         BufferedReader r = new BufferedReader(new InputStreamReader(is,"utf-8"));
         PrintWriter pw = new PrintWriter(new OutputStreamWriter(System.out, "utf-8"));
         DocumentPreprocessor documentPreprocessor = new DocumentPreprocessor(r);
         documentPreprocessor.setTokenizerFactory(ptbTokenizerFactory);
+        List<TaggedWord> Sentences = new ArrayList<TaggedWord>();
         for (List<HasWord> sentence : documentPreprocessor) {
             List<TaggedWord> tSentence = tagger.tagSentence(sentence);
             pw.println(SentenceUtils.listToString(tSentence, false));
+            Sentences.addAll(tSentence);
         }
+        pw.close();
+        return Sentences;
+    }
 
-        // print the adjectives in one more sentence. This shows how to get at words and tags in a tagged sentence.
-        List<HasWord> sent = SentenceUtils.toWordList("The", "slimy", "slug", "crawled", "over", "the", "long", ",", "green", "grass", ".");
-        List<TaggedWord> taggedSent = tagger.tagSentence(sent);
-        String analized_text = "";
-        for (TaggedWord tw : taggedSent) {
-            if (tw.tag().startsWith("JJ")) {
-                analized_text += tw.word();
-                pw.println(tw.word());
+    /**
+     * Eliminates all the other words that are not of the desired type.
+     * @param type
+     * @param sentences
+     * @return
+     */
+    public List<TaggedWord> deleteAllOtherTypes(String type, List<TaggedWord> sentences){
+       //type = "pp000000";
+        for (Iterator<TaggedWord>iterator = sentences.iterator(); iterator.hasNext();) {
+            TaggedWord word = iterator.next();
+            if(!word.tag().equals(type)){
+                iterator.remove();
             }
         }
-
-        pw.close();
-        return analized_text;
+        return sentences;
     }
 
 

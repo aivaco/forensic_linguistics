@@ -1,9 +1,11 @@
 package com.forensic;
+import edu.stanford.nlp.ling.TaggedWord;
 import edu.stanford.nlp.util.logging.Redwood;
 
 
 
 import java.io.*;
+import java.util.List;
 
 
 public class Main {
@@ -13,14 +15,13 @@ public class Main {
 
         Classify c = new Classify();
         ExtractTextFromBook e = new ExtractTextFromBook();
-        c.classifyText("A passenger plane has crashed shortly after take-off from Kyrgyzstan's\n" +
-                "capital, Bishkek, killing a large number of those on board. The head of\n" +
-                "Kyrgyzstan's civil aviation authority said that out of about 90\n" +
-                "passengers and crew, only about 20 people have survived. The Itek Air\n" +
-                "Boeing 737 took off bound for Mashhad, in north-eastern Iran, but turned\n" +
-                "round some 10 minutes later.\n");
+        String sample = "";
+        sample = e.extractPagesFromBook("test",2,3);
+        sample = e.selectLinesFromAbove(sample,10);
+        List<TaggedWord> a = c.classifyText(sample);
+        c.deleteAllOtherTypes("pp000000",a);
 
-        e.extractPagesFromBook("test",2,3);
+
 //        if (args.length != 2) {
 //            log.info("usage: java TaggerDemo2 modelFile fileToTag");
 //            return;
