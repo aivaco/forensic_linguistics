@@ -1,6 +1,7 @@
 package com.forensic;
 
-import org.apache.commons.io.FileUtils;
+import java.io.File;
+import java.io.FileWriter;
 import java.nio.charset.Charset;
 
 
@@ -9,9 +10,9 @@ import java.io.IOException;
 /**
  * It manages all the functions related to the file that has to be created.
  */
-public class File {
+public class Archivo {
 
-    private FileUtils file;
+    private File file;
     /**
      * Creates the file with a respective name in local path.
      *
@@ -24,6 +25,7 @@ public class File {
                 file = new File(".//" + name + "." + type);
             else
                 file = new File(".//" + name);
+
             if (file.createNewFile()) {
                 System.out.println("Archivo " + name + "." + type + " creado exitosamente");
             } else {
@@ -34,15 +36,18 @@ public class File {
         }
     }
 
-    /**
-     * Writes a line in a specific file.
-     *
-     * @param data
-     */
-    public void writeLineInFile(String data) {
-        data = data + "\n";
+    public void writeInFile(String data) {
+        data += "\n";
         Charset.forName("UTF-8").encode(data);              //Sets the string to UTF-8.
-        writeInFile(data);
-    }
 
+        try {
+            FileWriter writer = new FileWriter(file, true);
+            writer.write(data);
+            writer.flush();
+            writer.close();
+        }
+        catch (IOException exception) {
+            exception.printStackTrace();
+        }
+    }
 }

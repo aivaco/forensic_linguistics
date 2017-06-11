@@ -23,7 +23,7 @@ public class ExtractTextFromBook {
     public String extractPagesFromBook(String book_path, int start_page, int end_page) throws IOException {
         book_path = ".//hojarasca.pdf";
         start_page = 6;
-        end_page = 106;
+        end_page = 7;
         File file = new File(book_path);
         PDDocument document = PDDocument.load(file);
         PDFTextStripper pdfStripper = new PDFTextStripper();
