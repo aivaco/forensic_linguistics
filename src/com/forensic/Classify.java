@@ -9,7 +9,9 @@ import edu.stanford.nlp.process.DocumentPreprocessor;
 import edu.stanford.nlp.process.PTBTokenizer;
 import edu.stanford.nlp.process.TokenizerFactory;
 import edu.stanford.nlp.tagger.maxent.MaxentTagger;
+import edu.stanford.nlp.util.logging.Redwood;
 
+import javax.swing.*;
 import java.io.*;
 import java.util.*;
 
@@ -37,7 +39,7 @@ public class Classify {
         List<TaggedWord> Sentences = new ArrayList<TaggedWord>();
         for (List<HasWord> sentence : documentPreprocessor) {
             List<TaggedWord> tSentence = tagger.tagSentence(sentence);
-            pw.println(SentenceUtils.listToString(tSentence, false));
+            //pw.println(SentenceUtils.listToString(tSentence, false));
             Sentences.addAll(tSentence);
         }
         pw.close();
@@ -52,12 +54,15 @@ public class Classify {
      */
     public List<TaggedWord> deleteAllOtherTypes(String type, List<TaggedWord> sentences){
        //type = "pp000000";
+        //log.info("Se extraerá el tipo de palabra deseado " + type);
         for (Iterator<TaggedWord>iterator = sentences.iterator(); iterator.hasNext();) {
             TaggedWord word = iterator.next();
-            if(!word.tag().equals(type)){
+            if(word.tag().contains("vm") || !word.tag().contains(type)){
                 iterator.remove();
             }
         }
+        System.out.println("Las palabras restantes son: ");
+
         return sentences;
     }
 

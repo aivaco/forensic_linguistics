@@ -10,16 +10,16 @@ import java.util.List;
 
 public class Main {
     /** A logger for this class */
-    private static Redwood.RedwoodChannels log = Redwood.channels(Main.class);
+    //private static Redwood.RedwoodChannels log = Redwood.channels(Main.class);
     public static void main(String[] args) throws IOException, ClassNotFoundException {
 
         Classify c = new Classify();
         ExtractTextFromBook e = new ExtractTextFromBook();
         String sample = "";
         sample = e.extractPagesFromBook("test",2,3);
-        sample = e.selectLinesFromAbove(sample,10);
+        //sample = e.selectLinesFromAbove(sample,10);
         List<TaggedWord> a = c.classifyText(sample);
-        c.deleteAllOtherTypes("pp000000",a);
+        c.deleteAllOtherTypes("sp",a);
 
 
 //        if (args.length != 2) {
